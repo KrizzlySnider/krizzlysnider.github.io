@@ -1,0 +1,244 @@
+/* alternatives Boxmodell */
+html { 
+  box-sizing: border-box; 
+} 
+
+*, ::before, ::after { 
+  box-sizing: inherit; 
+}
+
+body {
+    max-width: 75em;
+    margin: 0 auto; 
+	padding: 0 1em;
+    font: normal 1em Arial, sans-serif;
+	color: #000000;
+    background: #000000;
+	position:relative;
+}
+.text {
+	font-weight: bold;
+	box-shadow: 0 0 20px #ababab inset, 0 2px 1px rgba(0,0,0,0.2);
+	color: #4f4f4f;
+	background: #4f4f4f;
+	padding: 0.5em;
+	border-radius: .5em;
+	text-decoration: none;
+
+}
+/* ===== header ===== */
+
+header.banner {
+	background: #4f4f4f;
+	padding: .5em 1em;
+	box-shadow: 0 0 10px rgba(0,0,0,0.2);
+	border-radius: 0 0 1em 1em;
+}
+
+#logo {
+	margin: 22px 0 0 3%;
+	color: #58585a;
+	font-size:1.7em;
+	font-style:italic;
+	font-weight:normal;
+	text-decoration: none;
+}
+
+header a#navlink {
+	display: block;
+	float: right;
+	color: #88a600;
+	text-decoration: none;
+	font-size: 2em;
+	font-weight: bold;
+}
+		
+/* ===== content / Inhalt ===== */
+	
+main {
+	padding: 1em;
+	background: #4f4f4f;
+	box-shadow: 0 0 10px rgba(0,0,0,0.2);
+	border-radius: 1em;  
+}
+
+a {
+	color: #ffffff; 
+}
+b {
+    color: #ffffff;
+}
+a.button{
+	background: #97b314;
+	font-weight: bold;
+	box-shadow: 0 0 20px #c3d34e inset, 0 2px 1px rgba(0,0,0,0.2);
+	color: #4f4f4f;
+	padding: 0.5em;
+	border-radius: .5em;
+	text-decoration: none;	
+}
+a.button:hover,
+a.button:focus {
+	background: #ffffff;
+}
+
+h1 {
+    color: #ffffff;
+}
+h2 {
+    color: #ffffff;
+}
+h5 {
+    color: #ffffff;
+}
+h3 {
+    color: #ffffff;
+}
+h1 span,
+.akzentfarbe1 {
+	color: #ffffff;
+}
+
+h1 a:hover span {
+    color: #4f4f4f;
+}
+
+.akzentfarbe2 {
+	color: orange;
+}
+
+aside,
+section {
+	font-weight: bold;
+	background: #4f4f4f;
+	padding: 0.2em;
+	border-radius: .2em;
+	text-decoration: none;
+	width: auto;
+}
+
+aside h2,
+section h2 {
+	color: #4f4f4f;
+	padding: .5em;
+	margin: 0;
+	background: rgba(195,214,106,0.95);
+	border-radius: .5em;
+	box-shadow: 0 3px 0 #708900;
+}
+p{
+    color: #ffffff;
+}
+section p {
+	padding: 0.5em 1em;
+}
+
+section p:first-of-type {
+	font-weight: bold;
+	color: #ffffff;
+}
+
+section img {
+
+}
+
+aside {
+}
+
+section a.button {			
+	position: absolute;	/* So werden Buttons immer an der gleichen Stelle, unabhÃ¤ngig vom vorhandenen Inhalt, positioniert */
+	right: 1em;
+	bottom: 1em;
+}
+
+form {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap:.5em; 
+	padding: 1em; 
+}
+
+form input {
+	background: #555;
+	border-radius: 4px;
+	border: none;
+	color: #4f4f4f;
+	padding: 0.75em 0.75em 0.75em 2.5em;
+	font-weight: bold;
+}
+section ul {
+	margin: 1em 0 0 3em;
+}
+		
+section li {
+	font-weight: bold;
+	margin: 0.5em 0 1em 2em;
+	width: auto;
+}
+section li i {
+	color: #ffffff; 
+}
+
+a[href^="tel"] { white-space: nowrap; }
+
+/* ===== Navigation ===== */
+
+li {
+	display: block;
+	list-style: none;
+	margin-right: .5em; 
+	width: auto;
+	float: left;
+}
+
+li a {
+	display: block; 
+	text-decoration: none;
+	padding: 0.5em 1em;
+	background-color: #4f4f4f;
+	border-radius: .5em .5em 0 0;
+	width: auto;
+	text-align: center;
+}
+
+li a[aria-current=page] {
+	font-weight:bold;
+    background: linear-gradient(rgba(195,214,106,0.95), #4f4f4f);
+    width: auto;
+	text-align: center;
+}
+
+li a:hover,
+li a:focus, 
+li a:active  {
+	color: white;
+    background: linear-gradient(#fff, #4f4f4f);	   
+}
+ul {
+  	display: block; 
+	text-decoration: none;
+	padding: 0.5em 1em;
+	width: auto;
+	color: transparent;
+}
+
+
+@supports not (display: grid) {
+  main {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+main > * {
+  flex: 1 100%;
+} 
+article {
+  flex: 1 64%;      
+  margin: 1%;
+}
+section,
+aside {
+  flex: 1 31%;
+  margin: 1%;
+}
+}
