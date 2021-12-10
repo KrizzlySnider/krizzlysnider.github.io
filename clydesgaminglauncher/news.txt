@@ -1,0 +1,21 @@
+News
+22.03.2021 Update 5
+- Neu
+  Cleanerfunktion hinzugefügt. Nun kannst du deinen Temp Ordner leeren lassen.
+  Lasse dir im Cleaner Tab deinen Speicherplatz anzeigen
+17.03.2021 Update 4
+- Änderungen
+  Es wurden Änderungen am grafischen Design vorgenommen.
+11.03.2021 Update 3
+- Neu
+  Du kannst nun bis zu 3 Spiele gleichzeitig hinzufügen! Bitte klicke hierzu auf den "Mehr Spiele hinzufügen Button"
+  oder lösche einmalig deine Configdatei.
+- Bugfixes
+  Eine unnötige Abfrage wurde entfernt um Ressourcen zu sparen
+10.03.2021 Update 2
+- Neu
+  Es gibt nun eine Updatefunktion. Gehe dazu in den Tab "Einstellungen" und klicke auf "Update runterladen".
+  Nun kannst du die Updatedatei speichern.
+23.02.2021
+- Bugfixes
+  Es wurde ein Bug gefixt, der den gespeicherten Spielepfad gelöscht hat.
