@@ -1,0 +1,6 @@
+[Einstellungen]
+ErsterLogin=0
+Username=
+Spielpfad1=0
+Spielpfad2=0
+Spielpfad3=0
