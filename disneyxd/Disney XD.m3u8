@@ -1,0 +1,3 @@
+#EXTM3U
+#EXTINF:0 tvg-country="RU" tvg-logo="" group-title="Undefined",DISNEY XD
+http://7.tcp.eu.ngrok.io:14760/example.m3u8
