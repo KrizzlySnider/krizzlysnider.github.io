@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Supermarkt Preise (Statische Vorschau)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* CSS from index.php copied here for static display */
+        body { font-family: 'Segoe UI', sans-serif; background: #f3f4f6; padding: 20px; color:#333; margin:0; }
+        .toolbar { max-width: 1100px; margin: 0 auto 20px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .toolbar-form { display: flex; flex-direction: column; gap: 15px; }
+        @media(min-width: 768px) { .toolbar-form { flex-direction: row; align-items: center; justify-content: space-between; } }
+        .search-group { flex: 1 1 300px; display: flex; gap: 10px; }
+        .search-group input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        .search-group button { background: #dc2626; color: white; border: none; padding: 0 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .filter-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; font-size: 0.9rem; }
+        .filter-group { display: flex; gap: 15px; align-items: center; }
+        .divider { width:1px; height:20px; background:#ddd; }
+        .sort-group select { padding: 8px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; }
+        .checkbox-label { display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; }
+        .checkbox-label input { accent-color: #dc2626; width: 16px; height: 16px; }
+
+        /* GRID & CARDS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; overflow: hidden; display: flex; flex-direction: column; position:relative; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #dc2626; }
+        
+        /* Badges */
+        .badges-container { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; z-index: 2; }
+        .store-badge { color: white; font-size: 0.7rem; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; font-weight: bold; }
+        .store-rewe { background: #ec2209; }
+        .store-kaufland { background: #e2001a; }
+        .date-badge { background: rgba(255,255,255,0.95); border: 1px solid #ddd; color: #555; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        .card-img { width: 100%; height: 160px; object-fit: contain; padding: 20px; box-sizing: border-box; }
+        .card-body { padding: 0 15px 15px; flex: 1; display: flex; flex-direction: column; }
+        .card h3 { font-size: 0.95rem; margin: 0 0 5px; height: 40px; overflow: hidden; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .unit { font-size: 0.8rem; color:#888; margin-bottom: 8px; }
+
+        .prices { margin-top: auto; padding-top: 10px; border-top: 1px solid #f3f4f6; }
+        .price-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+        .main-price { font-size: 1.25rem; font-weight: 800; color: #dc2626; }
+        .rewe-loyalty { color: #d97706; } 
+        .loyalty-price { color: #2563eb; }
+        
+        .label-small { font-size:0.65rem; font-weight:bold; padding: 1px 4px; border-radius: 3px; vertical-align: middle; text-transform: uppercase; }
+        .lbl-card { color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; }
+        .lbl-bonus { color: #d97706; background: #fffbeb; border: 1px solid #fcd34d; }
+
+        .pager { text-align: center; margin-top: 40px; margin-bottom: 40px; }
+        .pager a { display: inline-block; padding: 8px 14px; margin: 0 3px; background: white; border: 1px solid #ddd; text-decoration: none; color: #333; border-radius: 4px; }
+        .pager a.active { background: #dc2626; color: white; border-color: #dc2626; }
+        .pager a:hover:not(.active) { background: #eee; }
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <form class="toolbar-form" id="filterForm" method="GET" action="index_static.html">
+            <input type="hidden" name="filter_active" value="1">
+
+            <div class="search-group">
+                <input type="text" name="q" placeholder="Produkt suchen..." value="">
+                <button type="submit">Suchen</button>
+            </div>
+
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="checkbox-label"><input type="checkbox" name="f_rewe" value="1" checked disabled> Rewe</label>
+                    <label class="checkbox-label"><input type="checkbox" name="f_kaufland" value="1" checked disabled> Kaufland</label>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="filter-group">
+                    <label class="checkbox-label" title="Nur Angebote mit Karte anzeigen">
+                        <input type="checkbox" id="chk_only" name="f_loyalty_only" value="1" disabled> 
+                        Nur Loyalty-Preise
+                    </label>
+                    <label class="checkbox-label" title="Angebote mit Karte ausblenden">
+                        <input type="checkbox" id="chk_hide" name="f_loyalty_hide" value="1" disabled> 
+                        Loyalty ausblenden
+                    </label>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="sort-group">
+                    <select name="sort" disabled>
+                        <option value="date_desc" selected>Neueste zuerst</option>
+                    </select>
+                    <select name="limit" disabled>
+                        <option value="20" selected>20</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <p style="font-size:0.8rem; color:#666;">*Hinweis: Dies ist eine statische Vorschau. Alle Filter, Sortierungen und die Suche sind deaktiviert.</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <a href="product_static.html?id=kaufland_00991599" style="text-decoration:none; color:inherit; height:100%; display:flex; flex-direction:column;">
+                
+                <div class="badges-container">
+                    <span class="store-badge store-kaufland">KAUFLAND</span>
+                    <span class="date-badge">📅 04.12. - 10.12.</span>
+                </div>
+
+                <img src="https://kaufland.media.schwarz/is/image/schwarz/00991603a-2" class="card-img" onerror="this.src='https://placehold.co/200?text=Bild+fehlt'">
+                
+                <div class="card-body">
+                    <h3>Dtsch. Speisekartoffeln XXL</h3>
+                    <div class="unit">je 7,5-kg-Sack</div>
+
+                    <div class="prices">
+                        <div class="price-row">
+                            <span class="main-price">3,99 €</span>
+                            <span style="text-decoration:line-through; color:#999; font-size:0.8rem; align-self:center;">
+                                6,99
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="card">
+            <a href="product_static.html?id=kaufland_01276651" style="text-decoration:none; color:inherit; height:100%; display:flex; flex-direction:column;">
+                
+                <div class="badges-container">
+                    <span class="store-badge store-kaufland">KAUFLAND</span>
+                    <span class="date-badge">📅 04.12. - 10.12.</span>
+                </div>
+
+                <img src="https://kaufland.media.schwarz/is/image/schwarz/00372690FR-1" class="card-img" onerror="this.src='https://placehold.co/200?text=Bild+fehlt'">
+                
+                <div class="card-body">
+                    <h3>Niederl./span. Cocktailrispentomaten</h3>
+                    <div class="unit">je 500-g-Packg.</div>
+
+                    <div class="prices">
+                        <div class="price-row">
+                            <span class="main-price">1,49 €</span>
+                            <span style="text-decoration:line-through; color:#999; font-size:0.8rem; align-self:center;">
+                                2,49
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="card">
+            <a href="product_static.html?id=rewe_12345" style="text-decoration:none; color:inherit; height:100%; display:flex; flex-direction:column;">
+                
+                <div class="badges-container">
+                    <span class="store-badge store-rewe">REWE</span>
+                    <span class="date-badge">📅 09.12. - 15.12.</span>
+                </div>
+
+                <img src="https://placehold.co/200?text=Rewe+Käse" class="card-img" onerror="this.src='https://placehold.co/200?text=Bild+fehlt'">
+                
+                <div class="card-body">
+                    <h3>Deutscher Markenbutter</h3>
+                    <div class="unit">250g Packung</div>
+
+                    <div class="prices">
+                        <div class="price-row" style="margin-bottom: 4px;">
+                            <span class="main-price rewe-loyalty">1,29 €</span>
+                            <span class="label-small lbl-bonus">BONUS</span>
+                        </div>
+                        
+                        <div class="price-row">
+                            <span style="text-decoration:line-through; color:#999; font-size:1rem; align-self:center;">1,99 €</span>
+                            <span style="color:#666; font-size:0.8rem; align-self:center;">Normal</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="pager">
+        <a href="#" style="pointer-events: none; opacity:0.5;">&laquo; Zurück</a> 
+        <span style="margin:0 10px; color:#666;">Seite 1 / 1 (Total: 3)</span>
+        <a href="#" style="pointer-events: none; opacity:0.5;">Weiter &raquo;</a> 
+    </div>
+
+</body>
+</html>
